@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.collector import router as collector_router
 from app.core.config import settings
 
 logging.basicConfig(
@@ -38,6 +39,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 挂载业务路由
+app.include_router(collector_router)
 
 
 @app.get("/")

@@ -25,6 +25,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- SpringDoc OpenAPI 3 (Swagger UI) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+
         <!-- MyBatis-Plus Spring Boot 3 官方 Starter -->
         <dependency>
             <groupId>com.baomidou</groupId>

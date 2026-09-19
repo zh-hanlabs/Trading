@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 
 /**
  * 行业板块资金流分时快照持久化实体
@@ -122,5 +122,5 @@ public class SectorSnapshot implements Serializable {
      * 记录创建时间
      */
     @TableField("created_at")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

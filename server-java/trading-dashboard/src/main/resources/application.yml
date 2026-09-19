@@ -31,3 +31,13 @@ logging:
   level:
     root: INFO
     com.trading.dashboard: DEBUG
+
+# SpringDoc OpenAPI 3 配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+

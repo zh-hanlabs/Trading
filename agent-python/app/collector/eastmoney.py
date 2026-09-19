@@ -1,4 +1,5 @@
 import logging
+import socket
 import time
 from datetime import date, datetime
 from typing import Any, ClassVar, Self
@@ -7,6 +8,19 @@ from zoneinfo import ZoneInfo
 import httpx
 
 from app.collector.models import MinuteKlinePoint, SectorSnapshot
+
+# 针对本地 VPN / 代理 TUN 模式：
+# 过滤掉 IPv6 Fake-IP，强制仅使用 IPv4 解析，彻底避免服务端连接重置断开
+_orig_getaddrinfo = socket.getaddrinfo
+
+
+def _ipv4_only_getaddrinfo(host: Any, port: Any, family: int = 0, socktype: int = 0, proto: int = 0, flags: int = 0) -> list[Any]:
+    res = _orig_getaddrinfo(host, port, family, socktype, proto, flags)
+    ipv4_res = [r for r in res if r[0] == socket.AF_INET]
+    return ipv4_res if ipv4_res else res
+
+
+socket.getaddrinfo = _ipv4_only_getaddrinfo
 
 logger = logging.getLogger("trading.collector.eastmoney")
 
@@ -31,15 +45,17 @@ def safe_str(val: Any) -> str | None:
 class EastMoneyClient:
     """东方财富公网行情与资金流接口通信客户端"""
 
-    BASE_URL_CLIST = "http://push2.eastmoney.com/api/qt/clist/get"
-    BASE_URL_KLINE = "http://push2.eastmoney.com/api/qt/stock/fflow/kline/get"
+    # 使用东财高可用稳定数据中心节点 push2delay，彻底规避 push2 节点的 WAF 频控断连
+    BASE_URL_CLIST = "https://push2delay.eastmoney.com/api/qt/clist/get"
+    BASE_URL_KLINE = "https://push2delay.eastmoney.com/api/qt/stock/fflow/kline/get"
+    UT_TOKEN = "b2884a393a59ad64002292a3e90d46a5"
 
     DEFAULT_HEADERS: ClassVar[dict[str, str]] = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         ),
-        "Referer": "http://quote.eastmoney.com/",
+        "Referer": "https://data.eastmoney.com/",
         "Accept": "*/*",
         "Connection": "keep-alive",
     }
@@ -116,6 +132,7 @@ class EastMoneyClient:
                 "pz": str(page_size),
                 "po": "1",
                 "np": "1",
+                "ut": self.UT_TOKEN,
                 "fltt": "2",
                 "invt": "2",
                 "fid": "f62",
@@ -168,6 +185,7 @@ class EastMoneyClient:
         params = {
             "secid": secid,
             "klt": "1",
+            "ut": self.UT_TOKEN,
             "fields1": "f1,f2,f3,f7",
             "fields2": "f51,f52,f53,f54,f55,f56,f57",
         }
