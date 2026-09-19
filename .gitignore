@@ -1,0 +1,33 @@
+# Environment & Secrets
+.env
+.env.local
+
+# Database & Docker Local Data
+docker/data/
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+venv/
+.venv/
+
+# Frontend / Node
+frontend/node_modules/
+frontend/dist/
+.npm
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.log
+
+# Local Reference Materials
+reference/
+
+# docs
+docs/
