@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: trading-gateway
+
+  cloud:
+    gateway:
+      # 全局跨域 CORS 配置
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+      # 统一微服务路由矩阵
+      routes:
+        # 1. 路由至 Java 看板服务 (:8081)
+        - id: dashboard-service
+          uri: http://${DASHBOARD_HOST:localhost}:${DASHBOARD_PORT:8081}
+          predicates:
+            - Path=/api/dashboard/**
+
+        # 2. 路由至 Python 智能体与数据引擎 (:8000)
+        - id: agent-service
+          uri: http://${AGENT_HOST:localhost}:${AGENT_PORT:8000}
+          predicates:
+            - Path=/api/agent/**
+
+logging:
+  level:
+    root: INFO
+    com.trading.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO

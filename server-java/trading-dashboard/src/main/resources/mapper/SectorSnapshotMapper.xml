@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trading.dashboard.mapper.SectorSnapshotMapper">
+
+    <!-- 走 idx_sector_flow_snapshot_rank 排序索引拉取流入 TopN -->
+    <select id="selectTopInflowBySnapshot" resultType="com.trading.dashboard.entity.SectorSnapshot">
+        SELECT *
+        FROM sector_fund_flow_snapshots
+        WHERE trade_date = #{tradeDate}
+          AND snapshot_time = #{snapshotTime}
+        ORDER BY main_net_inflow DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 走 idx_sector_flow_snapshot_rank 排序索引拉取流出 TopN -->
+    <select id="selectTopOutflowBySnapshot" resultType="com.trading.dashboard.entity.SectorSnapshot">
+        SELECT *
+        FROM sector_fund_flow_snapshots
+        WHERE trade_date = #{tradeDate}
+          AND snapshot_time = #{snapshotTime}
+        ORDER BY main_net_inflow ASC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 走 idx_sector_flow_timeline 覆盖索引批量拉取板块 240 点全天分时 -->
+    <select id="selectTimelineBySectors" resultType="com.trading.dashboard.entity.SectorSnapshot">
+        SELECT
+            sector_code,
+            sector_name,
+            snapshot_time,
+            main_net_inflow
+        FROM sector_fund_flow_snapshots
+        WHERE trade_date = #{tradeDate}
+        <if test="sectorCodes != null and sectorCodes.size() > 0">
+            AND sector_code IN
+            <foreach collection="sectorCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+        ORDER BY sector_code, snapshot_time ASC
+    </select>
+
+</mapper>

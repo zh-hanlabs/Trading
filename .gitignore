@@ -16,7 +16,17 @@ __pycache__/
 venv/
 .venv/
 
+# Java & Maven
+**/target/
+target/
+*.class
+*.jar
+*.war
+*.ear
+
 # Frontend / Node
+web-vue/node_modules/
+web-vue/dist/
 frontend/node_modules/
 frontend/dist/
 .npm
@@ -25,9 +35,13 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 *.log
+.idea/
+*.iml
+.vscode/
 
 # Local Reference Materials
 reference/
 
 # docs
 docs/
+

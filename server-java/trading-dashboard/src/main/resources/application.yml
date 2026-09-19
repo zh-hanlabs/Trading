@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: trading-dashboard
+
+  # PostgreSQL 只读数据源配置
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:trading}?currentSchema=public&stringtype=unspecified
+    username: ${POSTGRES_USER:trading_user}
+    password: ${POSTGRES_PASSWORD:trading_password}
+    hikari:
+      pool-name: TradingDashboardHikariPool
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      connection-timeout: 10000
+      max-lifetime: 1800000
+      read-only: true
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.trading.dashboard.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root: INFO
+    com.trading.dashboard: DEBUG

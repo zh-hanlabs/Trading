@@ -18,7 +18,7 @@ Trading/
 ├── docs/             # 核心设计文档库、接口字典与交接班便签 (docs/ai/handoff.md)
 ├── docker/           # 基础设施与数据库容器编排 (仅托管 PostgreSQL 16)
 ├── agent-python/     # Python 1分钟资金流采集机 + ReAct 智能体引擎 (SSE服务 :8000)
-├── server-java/      # Java 业务中台 (gateway :8080, dashboard :8081, common)
+├── server-java/      # Java 业务中台 (gateway :8080, dashboard :8081)
 └── web-vue/          # Vue 3 终端看板与智能体交互抽屉
 ```
 
